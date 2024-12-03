@@ -1,0 +1,52 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+env:
+  node_version: 22.11.0
+
+jobs:
+  run_publish_on_version_change:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - name: Copy repository
+      uses: actions/checkout@v4.1.7
+
+    - name: Setup node ${{ env.node_version }}
+      uses: actions/setup-node@v4.0.3
+      with:
+        node-version: ${{ env.node_version }}
+        registry-url: 'https://registry.npmjs.org'
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Determine if the version is new
+      id: detect_new_version
+      run: |
+        PACKAGE_VERSION="$(node -p -e "require('./package.json').version")"
+        PACKAGE_NAME="$(node -p -e "require('./package.json').name")"
+        FOUND_VERSION=$(npm view $PACKAGE_NAME versions | grep \'$PACKAGE_VERSION\')
+
+        if [ -z "$FOUND_VERSION" ]; then
+          echo "New version detected: $PACKAGE_VERSION"
+          echo "is_new_version=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "Version not changed: $PACKAGE_VERSION"
+        fi
+
+    - name: Install dependencies
+      if: ${{ steps.detect_new_version.outputs.is_new_version == 'true' }}
+      run: npm ci
+
+    - name: Build
+      if: ${{ steps.detect_new_version.outputs.is_new_version == 'true' }}
+      run: npm run build
+
+    - name: Publish
+      if: ${{ steps.detect_new_version.outputs.is_new_version == 'true' }}
+      run: npm publish --provenance --access public
