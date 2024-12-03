@@ -1,6 +1,6 @@
 {
   "name": "random-ip-in-subnet",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Generates a random IP address within the specified subnet.",
   "files": [
     "dist"
@@ -8,6 +8,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "patch": "npm version patch -m \"Upgrade to v%s\"",
+    "minor": "npm version minor -m \"Upgrade to v%s\"",
+    "major": "npm version major -m \"Upgrade to v%s\"",
     "build": "tsc"
   },
   "keywords": [
