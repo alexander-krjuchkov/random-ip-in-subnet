@@ -29,8 +29,8 @@ jobs:
       id: detect_new_version
       run: |
         PACKAGE_VERSION="$(node -p "require('./package.json').version")"
-        # PACKAGE_NAME="$(node -p "require('./package.json').name")"
-        # FOUND_VERSION=$(npm view $PACKAGE_NAME versions | grep \'$PACKAGE_VERSION\' 2> /dev/null)
+        PACKAGE_NAME="$(node -p "require('./package.json').name")"
+        FOUND_VERSION=$(npm view $PACKAGE_NAME versions | grep \'$PACKAGE_VERSION\' 2> /dev/null)
 
         # if [ -z "$FOUND_VERSION" ]; then
         #   echo "New version detected: $PACKAGE_VERSION"
