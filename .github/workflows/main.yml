@@ -43,6 +43,10 @@ jobs:
       if: ${{ steps.detect_new_version.outputs.is_new_version == 'true' }}
       run: npm ci
 
+    - name: Check for lint errors
+      if: ${{ steps.detect_new_version.outputs.is_new_version == 'true' }}
+      run: npm run lint
+
     - name: Build
       if: ${{ steps.detect_new_version.outputs.is_new_version == 'true' }}
       run: npm run build
