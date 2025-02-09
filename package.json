@@ -20,10 +20,18 @@
     "build": "tsup"
   },
   "keywords": [
-    "random IP",
-    "random IP in range",
+    "ip",
+    "ip-address",
+    "ipv4",
+    "random",
+    "random-ip",
+    "ip-generator",
     "subnet",
-    "CIDR"
+    "ip-subnet",
+    "cidr",
+    "network",
+    "prng",
+    "reproducible"
   ],
   "author": "Alexander Kryuchkov <alexander.v.kryuchkov@yandex.ru>",
   "license": "ISC",
