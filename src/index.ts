@@ -25,7 +25,12 @@ export function getRandomIpInSubnet(
         throw new Error('Invalid CIDR notation');
     }
     const prefixLength = parseInt(prefixLengthStr, 10);
-    const ipParts = ip.split('.').map(Number) as [number, number, number, number];
+    const ipParts = ip.split('.').map(Number) as [
+        number,
+        number,
+        number,
+        number,
+    ];
 
     if (
         ipParts.length !== 4 ||
