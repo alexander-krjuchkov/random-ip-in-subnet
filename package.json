@@ -16,7 +16,8 @@
     "minor": "npm version minor -m \"Upgrade to v%s\"",
     "major": "npm version major -m \"Upgrade to v%s\"",
     "push": "git push --follow-tags",
-    "lint": "tsc",
+    "check-types": "tsc --noEmit",
+    "lint": "npm run check-types && eslint . --fix",
     "build": "tsup"
   },
   "keywords": [
@@ -41,7 +42,13 @@
   },
   "type": "module",
   "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "3.5.0",
     "tsup": "^8.3.5",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.24.0"
   }
 }
