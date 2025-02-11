@@ -5,7 +5,7 @@
     "moduleDetection": "force",
     "moduleResolution": "node",
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noFallthroughCasesInSwitch": true,
