@@ -8,6 +8,7 @@ import {
     unsafeUniformIntDistribution,
     type RandomGenerator as PureRandomIntGenerator,
 } from 'pure-rand';
+import { isUniformlyDistributed } from './stat-testing.utils';
 
 // Utility functions
 
@@ -112,6 +113,10 @@ function isIpWithinSubnet(ip: string, cidr: string): boolean {
         // Excluding network and broadcast addresses
         return ipNumber > networkAddress && ipNumber < broadcastAddress;
     }
+}
+
+function extractLastBitsFromIp(ip: string, bitsCount: number): number {
+    return convertIpToNumber(ip) & ((1 << bitsCount) - 1);
 }
 
 function generateFloat64(rng: PureRandomIntGenerator) {
@@ -260,6 +265,90 @@ describe('PRNG backward compatibility tests', () => {
                 actualIpSequence.push(ip);
             }
             expect(actualIpSequence).toEqual(expectedIpSequence);
+        });
+    });
+});
+
+/**
+ * Statistical tests
+ *
+ * These tests analyze the statistical characteristics of the generated random results.
+ */
+describe('Statistical tests', () => {
+    describe('getRandomIpInSubnet', () => {
+        describe('should produce approximately uniform results for an approximately uniform random generator', () => {
+            test('for /31 prefix, both valid addresses are approximately equally likely', () => {
+                const subnet = '192.0.2.72/31';
+                const lastBitsToTest = 1;
+                const sampleSize = 20_000;
+
+                // const random = Math.random;
+                const seed = 42;
+                const random = createRandomGenerator(seed);
+
+                const categoriesCount = 2 ** lastBitsToTest;
+                const frequencies = new Array<number>(categoriesCount).fill(0);
+                for (let i = 0; i < sampleSize; i++) {
+                    const ip = getRandomIpInSubnet(subnet, random);
+                    const lastBits = extractLastBitsFromIp(ip, lastBitsToTest);
+                    frequencies[lastBits]! += 1;
+                }
+
+                const isUniform = isUniformlyDistributed(frequencies);
+                expect(isUniform).toBe(true);
+            });
+
+            test('for /24 prefix, returns approximately uniform distribution among available hosts', () => {
+                const subnet = '0.0.0.0/0';
+                const lastBitsToTest = 4;
+                const categoriesCount = 2 ** lastBitsToTest;
+                const sampleSize = 10_000 * categoriesCount;
+
+                // const random = Math.random;
+                const seed = 42;
+                const random = createRandomGenerator(seed);
+
+                const frequencies = new Array<number>(categoriesCount).fill(0);
+                for (let i = 0; i < sampleSize; i++) {
+                    const ip = getRandomIpInSubnet(subnet, random);
+                    const lastBits = extractLastBitsFromIp(ip, lastBitsToTest);
+                    frequencies[lastBits]! += 1;
+                }
+
+                // Exclude network and broadcast addresses
+                const relevantFrequencies = frequencies.slice(1, -1);
+
+                const isUniform = isUniformlyDistributed(relevantFrequencies);
+                expect(isUniform).toBe(true);
+            });
+        });
+    });
+
+    describe('getRandomIpInSubnets', () => {
+        test('uniformly selects all given non-overlapping subnets', () => {
+            const subnetList = [
+                '192.0.2.0/24',
+                '198.51.100.0/24',
+                '203.0.113.0/24',
+            ];
+            const categoriesCount = subnetList.length;
+            const sampleSize = 20_000 * categoriesCount;
+
+            // const random = Math.random;
+            const seed = 42;
+            const random = createRandomGenerator(seed);
+
+            const frequencies = new Array<number>(categoriesCount).fill(0);
+            for (let i = 0; i < sampleSize; i++) {
+                const ip = getRandomIpInSubnets(subnetList, random);
+                const subnetIndex = subnetList.findIndex((subnet) =>
+                    isIpWithinSubnet(ip, subnet),
+                );
+                frequencies[subnetIndex]! += 1;
+            }
+
+            const isUniform = isUniformlyDistributed(frequencies);
+            expect(isUniform).toBe(true);
         });
     });
 });

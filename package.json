@@ -46,6 +46,7 @@
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.20.0",
+    "@stdlib/stats-chi2gof": "^0.2.2",
     "@types/jest": "^29.5.14",
     "eslint": "^9.20.0",
     "eslint-config-prettier": "^10.0.1",
