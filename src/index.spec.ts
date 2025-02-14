@@ -9,93 +9,19 @@ import {
     type RandomGenerator as PureRandomIntGenerator,
 } from 'pure-rand';
 import { isUniformlyDistributed } from './stat-testing.utils';
+import { convertIpToNumber } from './ip.utils';
+import {
+    getBroadcastAddress,
+    getNetworkAddress,
+    parseCidrNotation,
+} from './cidr.utils';
 
 // Utility functions
-
-function convertIpToNumber(ip: string): number {
-    const ipParts = ip.split('.').map(Number) as [
-        number,
-        number,
-        number,
-        number,
-    ];
-
-    if (
-        ipParts.length !== 4 ||
-        ipParts.some((part) => part < 0 || part > 255)
-    ) {
-        throw new Error('Invalid IP address');
-    }
-
-    const ipNumber =
-        (ipParts[0] << 24) |
-        (ipParts[1] << 16) |
-        (ipParts[2] << 8) |
-        ipParts[3];
-
-    return ipNumber >>> 0;
-}
-
-// function convertNumberToIp(number: number): string {
-//     // https://stackoverflow.com/a/8105740
-//     const octets = [
-//         (number >>> 24) & 255,
-//         (number >>> 16) & 255,
-//         (number >>> 8) & 255,
-//         number & 255,
-//     ];
-
-//     return octets.join('.');
-// }
 
 // function format32bitBinary(x: number): string {
 //     // https://stackoverflow.com/a/16155417
 //     return (x >>> 0).toString(2).padStart(32, '0');
 // }
-
-function getNetworkMask(prefix: number): number {
-    if (prefix < 0 || prefix > 32) {
-        throw new Error('Invalid prefix length');
-    }
-
-    // Prefix specifies the number of leading bits set to one, followed by zeros
-    /** @todo: implement only on binary numbers without using intermediate string */
-    return parseInt('1'.repeat(prefix) + '0'.repeat(32 - prefix), 2);
-}
-
-function parseCidrNotation(cidr: string): [number, number] {
-    const parts = cidr.split('/');
-    if (
-        parts.length !== 2 ||
-        parts[0] === undefined ||
-        parts[1] === undefined
-    ) {
-        throw new Error('Invalid CIDR notation');
-    }
-
-    const ipNumber = convertIpToNumber(parts[0]);
-
-    const prefixLength = parseInt(parts[1], 10);
-    if (isNaN(prefixLength)) {
-        throw new Error('Invalid prefix length');
-    }
-
-    return [ipNumber, prefixLength];
-}
-
-function getNetworkAddress(cidr: string): number {
-    const [ipNumber, prefixLength] = parseCidrNotation(cidr);
-
-    const networkMask = getNetworkMask(prefixLength);
-    return (ipNumber & networkMask) >>> 0;
-}
-
-function getBroadcastAddress(cidr: string): number {
-    const [ipNumber, prefixLength] = parseCidrNotation(cidr);
-
-    const networkMask = getNetworkMask(prefixLength);
-    return (ipNumber | ~networkMask) >>> 0;
-}
 
 function isIpWithinSubnet(ip: string, cidr: string): boolean {
     const [, prefixLength] = parseCidrNotation(cidr);

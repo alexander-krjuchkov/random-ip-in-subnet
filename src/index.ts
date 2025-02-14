@@ -1,3 +1,5 @@
+import { convertNumberToIp } from './ip.utils';
+
 /**
  * @returns a random number greater than or equal to 0 and less than 1.
  * Should return a floating-point, pseudo-random number
@@ -72,12 +74,7 @@ export function getRandomIpInSubnet(
     const newIpAsNumber = ipAsNumber | randomHostNumber;
 
     // Convert new 32-bit integer IP to IP string
-    const randomIP = [
-        (newIpAsNumber >>> 24) & 255,
-        (newIpAsNumber >>> 16) & 255,
-        (newIpAsNumber >>> 8) & 255,
-        newIpAsNumber & 255,
-    ].join('.');
+    const randomIP = convertNumberToIp(newIpAsNumber);
 
     return randomIP;
 }
