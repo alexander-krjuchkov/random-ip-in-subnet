@@ -6,8 +6,10 @@ function getNetworkMask(prefix: number): number {
     }
 
     // Prefix specifies the number of leading bits set to one, followed by zeros
-    /** @todo: implement only on binary numbers without using intermediate string */
-    return parseInt('1'.repeat(prefix) + '0'.repeat(32 - prefix), 2);
+    if (prefix === 0) {
+        return 0;
+    }
+    return (-1 << (32 - prefix)) >>> 0;
 }
 
 export function parseCidrNotation(cidr: string): [number, number] {
