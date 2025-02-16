@@ -45,24 +45,46 @@ npm i random-ip-in-subnet
 
 ## API documentation
 
-### `getRandomIpInSubnet(subnet: string, random?: () => number): string`
+Before using the functions, please review the common parameters below.
+
+### Common parameters
+
+These parameters are shared among several functions in the library.
+
+#### CIDR notation subnet
+
+A string representing a valid subnet in CIDR notation.  
+For IPv4, this is a string of 4 decimal numbers representing the 4 octets of bits separated by dots, followed by a slash (`/`) and a decimal number from 0 (inclusive) to 32 (inclusive) indicating the prefix length.  
+All host bits must be set to 0.
+
+Example: `'192.0.2.0/24'`.
+
+#### Optional parameter: random generator
+
+A function that returns a pseudorandom floating-point number between 0 (inclusive) and 1 (exclusive) with an approximately uniform distribution.
+
+If not provided, `Math.random` is used.
+
+### Functions
+
+#### `getRandomIpInSubnet(subnet: string, random?: () => number): string`
 
 Generates a random IP address within the specified subnet.
 
 **Parameters:**
-- `subnet`: A string that specifies a valid subnet in CIDR notation (e.g., `'192.0.2.0/24'`).
-- `random` (optional): A function that returns a pseudorandom floating-point number between 0 (inclusive) and 1 (exclusive) with an approximately uniform distribution. If not provided, `Math.random` is used.
+- `subnet`: A string representing a valid subnet in CIDR notation. See [CIDR notation subnet](#cidr-notation-subnet).
+- `random` (optional): A function to generate a pseudorandom number. See [Optional parameter: random generator](#optional-parameter-random-generator).
 
 **Returns:**
 - A string representing a random IP address within the specified subnet.
 
-### `getRandomIpInSubnets(subnets: string[], random?: () => number): string`
+#### `getRandomIpInSubnets(subnets: string[], random?: () => number): string`
 
 Randomly selects one subnet from the provided list and generates a random IP address within it.
 
 **Parameters:**
-- `subnets`: A non-empty array of strings, each specifying a valid subnet in CIDR notation (e.g., `['198.51.100.0/24', '203.0.113.0/24']`).
-- `random` (optional): A function that returns a pseudorandom floating-point number between 0 (inclusive) and 1 (exclusive) with an approximately uniform distribution. If not provided, `Math.random` is used.
+- `subnets`: A non-empty array of strings, each representing a valid subnet in CIDR notation. See [CIDR notation subnet](#cidr-notation-subnet).
+- `random` (optional): A function to generate a pseudorandom number. See [Optional parameter: random generator](#optional-parameter-random-generator).
 
 **Returns:**
 - A string representing a random IP address from one of the provided subnets.
