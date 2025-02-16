@@ -172,6 +172,9 @@ console.log(ip);
     - **Refactor**  
     Improve naming, refactor code for clarity and maintainability, add additional tests where needed.
 
+    - **Handle non-zero host bits in subnets**  
+    Handle the case of non-zero host bits in a given subnet: either throw a validation exception or ignore them. The previous version of the library does neither, which may cause this case to produce incorrect results.
+
 * ❑ **v1.1**
     - **Add IPv6 support**  
     Add IPv6 support for better compliance with modern networking standards.
