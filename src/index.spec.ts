@@ -58,12 +58,12 @@ function createRandomGenerator(seed: number): LocalRandomFloatGenerator {
 }
 
 /**
- * Invariant testing
+ * Randomized invariant testing
  *
  * These tests ensure that basic guarantees such as respecting
  * value bounds are maintained, regardless of the randomness involved.
  */
-describe('Invariant testing', () => {
+describe('Randomized invariant testing', () => {
     describe('getRandomIpInSubnet', () => {
         describe('for /32 prefix', () => {
             test('returns the specified IP', () => {
@@ -275,6 +275,40 @@ describe('Statistical tests', () => {
 
             const isUniform = isUniformlyDistributed(frequencies);
             expect(isUniform).toBe(true);
+        });
+    });
+});
+
+describe('Special cases', () => {
+    describe('getRandomIpInSubnet', () => {
+        describe('when subnets differ only by host bits', () => {
+            test.each([
+                ['192.0.2.72/31', '192.0.2.73/31'],
+                ['192.0.2.72/30', '192.0.2.75/30'],
+                ['192.0.2.0/24', '192.0.2.128/24'],
+                ['240.0.0.0/4', '248.0.0.0/4'],
+            ])(
+                'should return the same result for %s and %s (ignores host bits)',
+                (zeroHostBitsSubnet, nonZeroHostBitsSubnet) => {
+                    const getIps = (subnet: string) => {
+                        const seed = 42;
+                        const random = createRandomGenerator(seed);
+
+                        const sequenceLength = 5;
+                        const ips = [];
+                        for (let i = 0; i < sequenceLength; i++) {
+                            const ip = getRandomIpInSubnet(subnet, random);
+                            ips.push(ip);
+                        }
+                        return ips;
+                    };
+
+                    const ipsForZeroHostBits = getIps(zeroHostBitsSubnet);
+                    const ipsForNonZeroHostBits = getIps(nonZeroHostBitsSubnet);
+
+                    expect(ipsForNonZeroHostBits).toEqual(ipsForZeroHostBits);
+                },
+            );
         });
     });
 });

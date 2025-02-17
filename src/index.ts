@@ -1,3 +1,4 @@
+import { getNetworkAddress } from './cidr.utils';
 import { convertNumberToIp } from './ip.utils';
 
 /**
@@ -51,10 +52,11 @@ export function getRandomIpInSubnet(
     if (prefixLength === 31) {
         // Generate one of two addresses
 
-        const firstHost = ip;
+        const networkAddressAsNumber = getNetworkAddress(cidrNotation);
 
-        const invertedLastBit = ipParts[3] ^ 1;
-        const secondHost = `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.${invertedLastBit}`;
+        const firstHost = convertNumberToIp(networkAddressAsNumber);
+
+        const secondHost = convertNumberToIp(networkAddressAsNumber | 1);
 
         return random() < 0.5 ? firstHost : secondHost;
     }
@@ -64,14 +66,9 @@ export function getRandomIpInSubnet(
     // Excluding network and broadcast addresses
     const randomHostNumber = Math.floor(random() * (totalAddresses - 2)) + 1;
 
-    // Convert IP to 32-bit integer
-    const ipAsNumber =
-        (ipParts[0] << 24) |
-        (ipParts[1] << 16) |
-        (ipParts[2] << 8) |
-        ipParts[3];
+    const networkAddressAsNumber = getNetworkAddress(cidrNotation);
 
-    const newIpAsNumber = ipAsNumber | randomHostNumber;
+    const newIpAsNumber = networkAddressAsNumber | randomHostNumber;
 
     // Convert new 32-bit integer IP to IP string
     const randomIP = convertNumberToIp(newIpAsNumber);

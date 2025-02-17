@@ -55,9 +55,11 @@ These parameters are shared among several functions in the library.
 
 A string representing a valid subnet in CIDR notation.  
 For IPv4, this is a string of 4 decimal numbers representing the 4 octets of bits separated by dots, followed by a slash (`/`) and a decimal number from 0 (inclusive) to 32 (inclusive) indicating the prefix length.  
-All host bits must be set to 0.
 
 Example: `'192.0.2.0/24'`.
+
+Note: If the provided CIDR includes host bits, they will be ignored. For example, if you pass the CIDR `192.0.2.1/24`, the network address `192.0.2.0/24` will be used.
+However, it is recommended to use subnets with host bits set to 0, such as `192.0.2.0/24`, as this more clearly defines network boundaries and makes them easier to read and work with.
 
 #### Optional parameter: random generator
 
@@ -156,7 +158,7 @@ console.log(ip);
 * ✅ ~~**Implement testing**~~  
     ~~Testing is an essential part of developing a high-quality product. Despite the challenges of implementing tests for a library that works with random variables, testing should still be integrated into the library to improve reliability and correctness.~~
 
-    * ✅ ~~**Invariant testing**~~  
+    * ✅ ~~**Randomized invariant testing**~~  
     ~~These tests ensure that basic guarantees such as respecting value bounds are maintained, regardless of the randomness involved.~~
 
     * ✅ ~~**PRNG backward compatibility tests**~~  
@@ -165,15 +167,15 @@ console.log(ip);
     * ✅ ~~**Statistical testing**~~  
     ~~These tests analyze the statistical characteristics of the generated random results.~~
 
-* ❑ **v1.0**
-    - **Improve validation**  
+* ⊟ **v1.0**
+    - ❑ **Improve validation**  
     Make input validation stricter, rework error handling, add error handling tests.
 
-    - **Refactor**  
+    - ⊟ **Refactor**  
     Improve naming, refactor code for clarity and maintainability, add additional tests where needed.
 
-    - **Handle non-zero host bits in subnets**  
-    Handle the case of non-zero host bits in a given subnet: either throw a validation exception or ignore them. The previous version of the library does neither, which may cause this case to produce incorrect results.
+    - ✅ ~~**Handle non-zero host bits in subnets**~~  
+    ~~Handle the case of non-zero host bits in a given subnet: either throw a validation exception or ignore them. The previous version of the library does neither, which may cause this case to produce incorrect results.~~
 
 * ❑ **v1.1**
     - **Add IPv6 support**  
