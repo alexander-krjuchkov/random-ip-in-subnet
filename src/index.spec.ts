@@ -8,7 +8,7 @@ import {
     unsafeUniformIntDistribution,
     type RandomGenerator as PureRandomIntGenerator,
 } from 'pure-rand';
-import { isUniformlyDistributed } from './stat-testing.utils';
+import { isUniformlyDistributed } from './testing.utils';
 import { convertIpToNumber } from './ip.utils';
 import {
     getBroadcastAddress,
