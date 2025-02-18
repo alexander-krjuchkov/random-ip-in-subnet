@@ -13,7 +13,6 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "strictNullChecks": true,
-    "removeComments": true,
     "noEmit": true
   }
 }
