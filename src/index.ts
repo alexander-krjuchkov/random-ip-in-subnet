@@ -1,14 +1,6 @@
 import { getNetworkAddress } from './cidr.utils';
 import { convertNumberToIp } from './ip.utils';
-
-/**
- * @returns a random number greater than or equal to 0 and less than 1.
- * Should return a floating-point, pseudo-random number
- * that is greater than or equal to 0 and less than 1,
- * with approximately uniform distribution over that range.
- * This function does not have to provide cryptographically secure random numbers.
- */
-export type RandomGenerator = () => number;
+import type { RandomGenerator } from './types';
 
 // function getRandomIp(random: RandomGenerator): string {
 //     return Array.from({ length: 4 })
@@ -93,3 +85,5 @@ export function getRandomIpInSubnets(
 
     return getRandomIpInSubnet(subnet, random);
 }
+
+export type { RandomGenerator };

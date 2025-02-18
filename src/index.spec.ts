@@ -1,8 +1,5 @@
-import {
-    getRandomIpInSubnet,
-    getRandomIpInSubnets,
-    type RandomGenerator as LocalRandomFloatGenerator,
-} from './index';
+import { getRandomIpInSubnet, getRandomIpInSubnets } from './index';
+import { type RandomGenerator as LocalRandomFloatGenerator } from './types';
 import {
     xoroshiro128plus,
     unsafeUniformIntDistribution,
