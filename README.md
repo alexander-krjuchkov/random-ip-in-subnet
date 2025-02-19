@@ -152,21 +152,6 @@ console.log(ip);
 
 ## Roadmap
 
-* ✅ ~~**Improve documentation**~~  
-    ~~Documentation should clearly describe the functionality of the library and provide a clear understanding of its purpose and features.~~
-
-* ✅ ~~**Implement testing**~~  
-    ~~Testing is an essential part of developing a high-quality product. Despite the challenges of implementing tests for a library that works with random variables, testing should still be integrated into the library to improve reliability and correctness.~~
-
-    * ✅ ~~**Randomized invariant testing**~~  
-    ~~These tests ensure that basic guarantees such as respecting value bounds are maintained, regardless of the randomness involved.~~
-
-    * ✅ ~~**PRNG backward compatibility tests**~~  
-    ~~When using a PRNG with a fixed seed, these tests ensure backward compatibility within each major version of the library.~~
-
-    * ✅ ~~**Statistical testing**~~  
-    ~~These tests analyze the statistical characteristics of the generated random results.~~
-
 * ⊟ **v1.0**
     - ❑ **Improve validation**  
     Make input validation stricter, rework error handling, add error handling tests.
@@ -180,6 +165,10 @@ console.log(ip);
 * ❑ **v1.1**
     - **Add IPv6 support**  
     Add IPv6 support for better compliance with modern networking standards.
+
+## Changelog
+
+For a detailed list of changes, please see [CHANGELOG](./CHANGELOG.md).
 
 ## Contribute
 
