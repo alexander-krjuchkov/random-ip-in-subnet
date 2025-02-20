@@ -1,30 +1,30 @@
 import { getRandomIpInSubnets } from './getRandomIpInSubnets';
 import { createRandomGenerator, isUniformlyDistributed } from './testing.utils';
-import { convertIpToNumber } from './ip.utils';
-import {
-    getBroadcastAddress,
-    getNetworkAddress,
-    parseCidrNotation,
-} from './cidr.utils';
+import { IPv4Network } from './IPv4Network';
+import { IPv4Address } from './IPv4Address';
 
-// Utility functions
+function isIpWithinSubnet(ipAddress: string, cidrNotation: string): boolean {
+    const network = IPv4Network.fromString(cidrNotation);
+    const ip = IPv4Address.fromString(ipAddress);
 
-function isIpWithinSubnet(ip: string, cidr: string): boolean {
-    const [, prefixLength] = parseCidrNotation(cidr);
-    const networkAddress = getNetworkAddress(cidr);
-    const broadcastAddress = getBroadcastAddress(cidr);
-    const ipNumber = convertIpToNumber(ip);
-
-    if (prefixLength === 32) {
+    if (network.prefixLength === 32) {
         // For /32 prefix, only one address is available
-        return ipNumber === networkAddress;
-    } else if (prefixLength === 31) {
-        // For /31 prefix, two addresses are available
-        return ipNumber === networkAddress || ipNumber === networkAddress + 1;
-    } else {
-        // Excluding network and broadcast addresses
-        return ipNumber > networkAddress && ipNumber < broadcastAddress;
+        return ip.number === network.networkAddress.number;
     }
+
+    if (network.prefixLength === 31) {
+        // For /31 prefix, two addresses are available
+        return (
+            ip.number === network.networkAddress.number ||
+            ip.number === (network.networkAddress.number | 1) >>> 0
+        );
+    }
+
+    // Excluding network and broadcast addresses
+    return (
+        ip.number > network.networkAddress.number &&
+        ip.number < network.broadcastAddress.number
+    );
 }
 
 /**

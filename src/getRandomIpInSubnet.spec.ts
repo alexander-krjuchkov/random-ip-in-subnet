@@ -1,12 +1,11 @@
 import { getRandomIpInSubnet } from './getRandomIpInSubnet';
 import { createRandomGenerator, isUniformlyDistributed } from './testing.utils';
-import { convertIpToNumber } from './ip.utils';
-import { getBroadcastAddress, getNetworkAddress } from './cidr.utils';
+import { IPv4Address } from './IPv4Address';
+import { IPv4Network } from './IPv4Network';
 
-// Utility functions
-
-function extractLastBitsFromIp(ip: string, bitsCount: number): number {
-    return convertIpToNumber(ip) & ((1 << bitsCount) - 1);
+function extractLastBitsFromIp(ipAddress: string, bitsCount: number): number {
+    const ip = IPv4Address.fromString(ipAddress);
+    return (ip.number & ((1 << bitsCount) - 1)) >>> 0;
 }
 
 /**
@@ -53,16 +52,17 @@ describe('Randomized invariant testing', () => {
             [24, '192.0.2.0/24'],
         ])('for /%d prefix', (prefix, cidr) => {
             test('returns IP between network and broadcast addresses', () => {
-                const networkAddress = getNetworkAddress(cidr);
-                const broadcastAddress = getBroadcastAddress(cidr);
+                const network = IPv4Network.fromString(cidr);
+                const networkAddress = network.networkAddress;
+                const broadcastAddress = network.broadcastAddress;
 
                 const iterations = 100;
                 for (let i = 0; i < iterations; i++) {
                     const ip = getRandomIpInSubnet(cidr);
-                    const ipNumber = convertIpToNumber(ip);
+                    const ipNumber = IPv4Address.fromString(ip).number;
 
-                    expect(ipNumber).toBeGreaterThan(networkAddress);
-                    expect(ipNumber).toBeLessThan(broadcastAddress);
+                    expect(ipNumber).toBeGreaterThan(networkAddress.number);
+                    expect(ipNumber).toBeLessThan(broadcastAddress.number);
                 }
             });
         });
