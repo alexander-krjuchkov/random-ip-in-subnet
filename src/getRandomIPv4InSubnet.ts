@@ -12,23 +12,23 @@ import type { RandomGenerator } from './types';
  * - Otherwise, generates an IP from the valid host range,
  * excluding the network and broadcast addresses.
  *
- * @param cidrNotation A valid CIDR network string (e.g. '192.0.2.0/24').
+ * @param subnet A valid CIDR network string (e.g. '192.0.2.0/24').
  * @param random Optional random generator function that
  * returns a number in [0, 1).
  * @returns A random IP address from the given network.
  * @throws {ValidationError} If the provided network is invalid.
  */
-export function getRandomIpInSubnet(
-    cidrNotation: string,
+export function getRandomIPv4InSubnet(
+    subnet: string,
     random: RandomGenerator = Math.random,
 ): string {
-    const network = IPv4Network.fromString(cidrNotation);
+    const network = IPv4Network.fromString(subnet);
     const prefixLength = network.prefixLength;
     const networkAddress = network.networkAddress;
 
     if (prefixLength === 32) {
         // single address in subnet
-        return network.networkAddress.toString();
+        return networkAddress.toString();
     }
 
     if (prefixLength === 31) {

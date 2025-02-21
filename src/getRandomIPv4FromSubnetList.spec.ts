@@ -1,4 +1,4 @@
-import { getRandomIpInSubnets } from './getRandomIpInSubnets';
+import { getRandomIPv4FromSubnetList } from './getRandomIPv4FromSubnetList';
 import { createRandomGenerator, isUniformlyDistributed } from './testing.utils';
 import { IPv4Network } from './IPv4Network';
 import { IPv4Address } from './IPv4Address';
@@ -35,13 +35,13 @@ function isIpWithinSubnet(ipAddress: string, cidrNotation: string): boolean {
  * value bounds are maintained, regardless of the randomness involved.
  */
 describe('Randomized invariant testing', () => {
-    describe('getRandomIpInSubnets', () => {
+    describe('getRandomIPv4FromSubnetList', () => {
         test('returns IP belonging to one of the subnets', () => {
             const subnets = ['198.51.100.0/24', '203.0.113.0/24'];
 
             const iterations = 100;
             for (let i = 0; i < iterations; i++) {
-                const ip = getRandomIpInSubnets(subnets);
+                const ip = getRandomIPv4FromSubnetList(subnets);
                 const isWithinAnySubnet = subnets.some((subnet) =>
                     isIpWithinSubnet(ip, subnet),
                 );
@@ -63,7 +63,7 @@ describe('Randomized invariant testing', () => {
  * revision.
  */
 describe('PRNG backward compatibility tests', () => {
-    describe('getRandomIpInSubnets', () => {
+    describe('getRandomIPv4FromSubnetList', () => {
         test('generates the same random IP sequence for the same PRNG with the same seed', () => {
             const seed = 42;
             const subnets = ['198.51.100.0/24', '203.0.113.0/24'];
@@ -81,7 +81,7 @@ describe('PRNG backward compatibility tests', () => {
 
             const actualIpSequence = [];
             for (let i = 0; i < sequenceLength; i++) {
-                const ip = getRandomIpInSubnets(subnets, random);
+                const ip = getRandomIPv4FromSubnetList(subnets, random);
                 actualIpSequence.push(ip);
             }
             expect(actualIpSequence).toEqual(expectedIpSequence);
@@ -95,7 +95,7 @@ describe('PRNG backward compatibility tests', () => {
  * These tests analyze the statistical characteristics of the generated random results.
  */
 describe('Statistical tests', () => {
-    describe('getRandomIpInSubnets', () => {
+    describe('getRandomIPv4FromSubnetList', () => {
         test('uniformly selects all given non-overlapping subnets', () => {
             const subnetList = [
                 '192.0.2.0/24',
@@ -111,7 +111,7 @@ describe('Statistical tests', () => {
 
             const frequencies = new Array<number>(categoriesCount).fill(0);
             for (let i = 0; i < sampleSize; i++) {
-                const ip = getRandomIpInSubnets(subnetList, random);
+                const ip = getRandomIPv4FromSubnetList(subnetList, random);
                 const subnetIndex = subnetList.findIndex((subnet) =>
                     isIpWithinSubnet(ip, subnet),
                 );
@@ -125,9 +125,9 @@ describe('Statistical tests', () => {
 });
 
 describe('Special cases', () => {
-    describe('getRandomIpInSubnet', () => {
+    describe('getRandomIPv4InSubnet', () => {
         test('throws error for empty subnet list', () => {
-            expect(() => getRandomIpInSubnets([])).toThrow(
+            expect(() => getRandomIPv4FromSubnetList([])).toThrow(
                 EmptySubnetListError,
             );
         });

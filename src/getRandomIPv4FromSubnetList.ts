@@ -1,6 +1,6 @@
 import { EmptySubnetListError } from './errors/EmptySubnetListError';
 import { ValidationError } from './errors/ValidationError';
-import { getRandomIpInSubnet } from './getRandomIpInSubnet';
+import { getRandomIPv4InSubnet } from './getRandomIPv4InSubnet';
 import type { RandomGenerator } from './types';
 
 /**
@@ -15,7 +15,7 @@ import type { RandomGenerator } from './types';
  * @throws {ValidationError} If the provided list of networks is
  * empty or a randomly selected subnet is invalid.
  */
-export function getRandomIpInSubnets(
+export function getRandomIPv4FromSubnetList(
     subnets: string[],
     random: RandomGenerator = Math.random,
 ): string {
@@ -25,5 +25,5 @@ export function getRandomIpInSubnets(
 
     const subnet = subnets[Math.floor(random() * subnets.length)]!;
 
-    return getRandomIpInSubnet(subnet, random);
+    return getRandomIPv4InSubnet(subnet, random);
 }

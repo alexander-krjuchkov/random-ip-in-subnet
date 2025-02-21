@@ -10,7 +10,7 @@ Generates a random IP address within the specified subnet.
 
 ## Generate IP address from CIDR
 
-The library provides the function `getRandomIpInSubnet(subnet, [random])`, which generates a random IPv4 address that belongs to a specified CIDR subnet (e.g., `192.0.2.0/24`).
+The library provides the function `getRandomIPv4InSubnet(subnet, [random])`, which generates a random IPv4 address that belongs to a specified CIDR subnet (e.g., `192.0.2.0/24`).
 
 - For a `/32` prefix, only one address is available, so that address is returned.
 - For a `/31` prefix, one of the two valid addresses is chosen at random.
@@ -20,7 +20,7 @@ For more details, see the [API documentation](#api-documentation).
 
 ## Multiple subnet support
 
-For working with multiple subnets, the library provides the function `getRandomIpInSubnets(subnets, [random])`. It accepts an array of CIDR subnets, randomly selects one of them, and generates an IP address using the logic of the `getRandomIpInSubnet` function.
+For working with multiple subnets, the library provides the function `getRandomIPv4FromSubnetList(subnets, [random])`. It accepts an array of CIDR subnets, randomly selects one of them, and generates an IP address using the logic of the `getRandomIPv4InSubnet` function.
 
 For more details, see the [API documentation](#api-documentation).
 
@@ -69,7 +69,7 @@ If not provided, `Math.random` is used.
 
 ### Functions
 
-#### `getRandomIpInSubnet(subnet: string, random?: () => number): string`
+#### `getRandomIPv4InSubnet(subnet: string, random?: () => number): string`
 
 Generates a random IP address within the specified subnet.
 
@@ -83,7 +83,7 @@ Generates a random IP address within the specified subnet.
 **Throws:**
 - `ValidationError` if the provided subnet is invalid.
 
-#### `getRandomIpInSubnets(subnets: string[], random?: () => number): string`
+#### `getRandomIPv4FromSubnetList(subnets: string[], random?: () => number): string`
 
 Randomly selects one subnet from the provided list and generates a random IP address within it.
 
@@ -108,10 +108,10 @@ Randomly selects one subnet from the provided list and generates a random IP add
 ### Generating an IP address for a given subnet
 
 ```js
-import { getRandomIpInSubnet } from 'random-ip-in-subnet';
+import { getRandomIPv4InSubnet } from 'random-ip-in-subnet';
 
 const subnet = '192.0.2.0/24';
-const ip = getRandomIpInSubnet(subnet);
+const ip = getRandomIPv4InSubnet(subnet);
 console.log(ip); // For example, '192.0.2.89'
 ```
 
@@ -133,7 +133,7 @@ import {
     unsafeUniformIntDistribution,
     type RandomGenerator as PureRandomGenerator,
 } from 'pure-rand';
-import { getRandomIpInSubnet } from 'random-ip-in-subnet';
+import { getRandomIPv4InSubnet } from 'random-ip-in-subnet';
 
 function generateFloat64(rng: PureRandomGenerator) {
     const upper = unsafeUniformIntDistribution(0, (1 << 26) - 1, rng);
@@ -146,30 +146,30 @@ const rng = xoroshiro128plus(seed);
 const customRandom = () => generateFloat64(rng);
 
 const subnet = '240.0.0.0/4';
-const ip1 = getRandomIpInSubnet(subnet, customRandom);
+const ip1 = getRandomIPv4InSubnet(subnet, customRandom);
 console.log(ip1); // '255.255.255.85'
-const ip2 = getRandomIpInSubnet(subnet, customRandom);
+const ip2 = getRandomIPv4InSubnet(subnet, customRandom);
 console.log(ip2); // '254.3.114.187'
 ```
 
 ### Generating an IP from array of subnets
 
 ```js
-import { getRandomIpInSubnets } from 'random-ip-in-subnet';
+import { getRandomIPv4FromSubnetList } from 'random-ip-in-subnet';
 
 const subnets = ['198.51.100.0/24', '203.0.113.0/24'];
-const ip = getRandomIpInSubnets(subnets);
+const ip = getRandomIPv4FromSubnetList(subnets);
 console.log(ip);
 ```
 
 ### Handling ValidationError
 
 ```js
-import { getRandomIpInSubnet, ValidationError } from 'random-ip-in-subnet';
+import { getRandomIPv4InSubnet, ValidationError } from 'random-ip-in-subnet';
 
 try {
     const subnet = 'invalid_subnet';
-    const ip = getRandomIpInSubnet(subnet);
+    const ip = getRandomIPv4InSubnet(subnet);
     console.log(ip);
 } catch (error) {
     if (error instanceof ValidationError) {

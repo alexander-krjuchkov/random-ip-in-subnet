@@ -1,4 +1,4 @@
-import { getRandomIpInSubnet } from './getRandomIpInSubnet';
+import { getRandomIPv4InSubnet } from './getRandomIPv4InSubnet';
 import { createRandomGenerator, isUniformlyDistributed } from './testing.utils';
 import { IPv4Address } from './IPv4Address';
 import { IPv4Network } from './IPv4Network';
@@ -15,7 +15,7 @@ function extractLastBitsFromIp(ipAddress: string, bitsCount: number): number {
  * value bounds are maintained, regardless of the randomness involved.
  */
 describe('Randomized invariant testing', () => {
-    describe('getRandomIpInSubnet', () => {
+    describe('getRandomIPv4InSubnet', () => {
         describe('for /32 prefix', () => {
             test('returns the specified IP', () => {
                 const iterations = 100;
@@ -25,7 +25,7 @@ describe('Randomized invariant testing', () => {
                         .join('.');
                     const cidr = `${inputIp}/32`;
 
-                    const outputIp = getRandomIpInSubnet(cidr);
+                    const outputIp = getRandomIPv4InSubnet(cidr);
                     expect(outputIp).toBe(inputIp);
                 }
             });
@@ -40,7 +40,7 @@ describe('Randomized invariant testing', () => {
 
                 const iterations = 100;
                 for (let i = 0; i < iterations; i++) {
-                    const outputIp = getRandomIpInSubnet(cidr);
+                    const outputIp = getRandomIPv4InSubnet(cidr);
                     expect(validIps).toContain(outputIp);
                 }
             });
@@ -58,7 +58,7 @@ describe('Randomized invariant testing', () => {
 
                 const iterations = 100;
                 for (let i = 0; i < iterations; i++) {
-                    const ip = getRandomIpInSubnet(cidr);
+                    const ip = getRandomIPv4InSubnet(cidr);
                     const ipNumber = IPv4Address.fromString(ip).number;
 
                     expect(ipNumber).toBeGreaterThan(networkAddress.number);
@@ -81,7 +81,7 @@ describe('Randomized invariant testing', () => {
  * revision.
  */
 describe('PRNG backward compatibility tests', () => {
-    describe('getRandomIpInSubnet', () => {
+    describe('getRandomIPv4InSubnet', () => {
         test('generates the same random IP sequence for the same PRNG with the same seed', () => {
             const seed = 42;
             const subnet = '0.0.0.0/0';
@@ -99,7 +99,7 @@ describe('PRNG backward compatibility tests', () => {
 
             const actualIpSequence = [];
             for (let i = 0; i < sequenceLength; i++) {
-                const ip = getRandomIpInSubnet(subnet, random);
+                const ip = getRandomIPv4InSubnet(subnet, random);
                 actualIpSequence.push(ip);
             }
             expect(actualIpSequence).toEqual(expectedIpSequence);
@@ -113,7 +113,7 @@ describe('PRNG backward compatibility tests', () => {
  * These tests analyze the statistical characteristics of the generated random results.
  */
 describe('Statistical tests', () => {
-    describe('getRandomIpInSubnet', () => {
+    describe('getRandomIPv4InSubnet', () => {
         describe('should produce approximately uniform results for an approximately uniform random generator', () => {
             test('for /31 prefix, both valid addresses are approximately equally likely', () => {
                 const subnet = '192.0.2.72/31';
@@ -127,7 +127,7 @@ describe('Statistical tests', () => {
                 const categoriesCount = 2 ** lastBitsToTest;
                 const frequencies = new Array<number>(categoriesCount).fill(0);
                 for (let i = 0; i < sampleSize; i++) {
-                    const ip = getRandomIpInSubnet(subnet, random);
+                    const ip = getRandomIPv4InSubnet(subnet, random);
                     const lastBits = extractLastBitsFromIp(ip, lastBitsToTest);
                     frequencies[lastBits]! += 1;
                 }
@@ -148,7 +148,7 @@ describe('Statistical tests', () => {
 
                 const frequencies = new Array<number>(categoriesCount).fill(0);
                 for (let i = 0; i < sampleSize; i++) {
-                    const ip = getRandomIpInSubnet(subnet, random);
+                    const ip = getRandomIPv4InSubnet(subnet, random);
                     const lastBits = extractLastBitsFromIp(ip, lastBitsToTest);
                     frequencies[lastBits]! += 1;
                 }
@@ -164,7 +164,7 @@ describe('Statistical tests', () => {
 });
 
 describe('Special cases', () => {
-    describe('getRandomIpInSubnet', () => {
+    describe('getRandomIPv4InSubnet', () => {
         describe('when subnets differ only by host bits', () => {
             test.each([
                 ['192.0.2.72/31', '192.0.2.73/31'],
@@ -181,7 +181,7 @@ describe('Special cases', () => {
                         const sequenceLength = 5;
                         const ips = [];
                         for (let i = 0; i < sequenceLength; i++) {
-                            const ip = getRandomIpInSubnet(subnet, random);
+                            const ip = getRandomIPv4InSubnet(subnet, random);
                             ips.push(ip);
                         }
                         return ips;
