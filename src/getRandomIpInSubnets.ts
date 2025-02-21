@@ -1,3 +1,4 @@
+import { EmptySubnetListError } from './errors/EmptySubnetListError';
 import { getRandomIpInSubnet } from './getRandomIpInSubnet';
 import type { RandomGenerator } from './types';
 
@@ -9,12 +10,10 @@ export function getRandomIpInSubnets(
     random: RandomGenerator = Math.random,
 ): string {
     if (subnets.length === 0) {
-        throw new Error('No subnets provided');
+        throw new EmptySubnetListError();
     }
-    const subnet = subnets[Math.floor(random() * subnets.length)];
-    if (!subnet) {
-        throw new Error('Could not get random subnet');
-    }
+
+    const subnet = subnets[Math.floor(random() * subnets.length)]!;
 
     return getRandomIpInSubnet(subnet, random);
 }

@@ -1,3 +1,5 @@
+import { InvalidIPv4AddressError } from './errors/InvalidIPv4AddressError';
+
 export class IPv4Address {
     /**
      * @param number - Integer value representing the IPv4 address,
@@ -7,7 +9,7 @@ export class IPv4Address {
      */
     constructor(public readonly number: number) {
         if (!Number.isInteger(number) || number < 0 || number > 2 ** 32 - 1) {
-            throw new Error('Invalid IPv4 address');
+            throw new InvalidIPv4AddressError();
         }
     }
 
@@ -22,7 +24,7 @@ export class IPv4Address {
             octets.some((octet) => !Number.isInteger(octet)) ||
             octets.some((octet) => octet < 0 || octet > 255)
         ) {
-            throw new Error('Invalid IPv4 address');
+            throw new InvalidIPv4AddressError();
         }
 
         const number = octets.reduce(

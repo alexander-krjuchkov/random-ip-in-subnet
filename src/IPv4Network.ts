@@ -1,3 +1,5 @@
+import { InvalidCidrNotationError } from './errors/InvalidCidrNotationError';
+import { InvalidPrefixLengthError } from './errors/InvalidPrefixLengthError';
 import { IPv4Address } from './IPv4Address';
 
 /**
@@ -31,7 +33,7 @@ export class IPv4Network {
 
     private static validatePrefixLength(prefix: number): void {
         if (!Number.isInteger(prefix) || prefix < 0 || prefix > 32) {
-            throw new Error('Invalid prefix length');
+            throw new InvalidPrefixLengthError();
         }
     }
 
@@ -54,7 +56,7 @@ export class IPv4Network {
             parts[0] === undefined ||
             parts[1] === undefined
         ) {
-            throw new Error('Invalid CIDR notation');
+            throw new InvalidCidrNotationError();
         }
 
         const ip = IPv4Address.fromString(parts[0]);

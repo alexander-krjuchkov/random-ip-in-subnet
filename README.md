@@ -80,6 +80,9 @@ Generates a random IP address within the specified subnet.
 **Returns:**
 - A string representing a random IP address within the specified subnet.
 
+**Throws:**
+- `ValidationError` if the provided subnet is invalid.
+
 #### `getRandomIpInSubnets(subnets: string[], random?: () => number): string`
 
 Randomly selects one subnet from the provided list and generates a random IP address within it.
@@ -90,6 +93,15 @@ Randomly selects one subnet from the provided list and generates a random IP add
 
 **Returns:**
 - A string representing a random IP address from one of the provided subnets.
+
+**Throws:**
+- `ValidationError` if the provided list of subnets is empty or a randomly selected subnet is invalid.
+
+### Errors
+
+#### `ValidationError`
+
+`ValidationError` is a custom error class representing validation errors thrown by the library. It is exported as part of the public API, allowing you to distinguish library-specific errors from other exceptions.
 
 ## Usage examples
 
@@ -150,11 +162,29 @@ const ip = getRandomIpInSubnets(subnets);
 console.log(ip);
 ```
 
+### Handling ValidationError
+
+```js
+import { getRandomIpInSubnet, ValidationError } from 'random-ip-in-subnet';
+
+try {
+    const subnet = 'invalid_subnet';
+    const ip = getRandomIpInSubnet(subnet);
+    console.log(ip);
+} catch (error) {
+    if (error instanceof ValidationError) {
+        console.error('Validation error:', error.message);
+    } else {
+        throw error;
+    }
+}
+```
+
 ## Roadmap
 
 * ⊟ **v1.0**
-    - ❑ **Improve validation**  
-    Make input validation stricter, rework error handling, add error handling tests.
+    - ✅ ~~**Improve validation**~~  
+    ~~Make input validation stricter, rework error handling, add error handling tests.~~
 
     - ⊟ **Refactor**  
     Improve naming, refactor code for clarity and maintainability, add additional tests where needed.

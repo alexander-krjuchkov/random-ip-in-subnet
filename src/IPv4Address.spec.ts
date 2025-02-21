@@ -1,3 +1,4 @@
+import { InvalidIPv4AddressError } from './errors/InvalidIPv4AddressError';
 import { IPv4Address } from './IPv4Address';
 
 describe('IPv4Address', () => {
@@ -18,7 +19,7 @@ describe('IPv4Address', () => {
     });
 
     describe('constructor should throw an error', () => {
-        const error = 'Invalid IPv4 address';
+        const error = InvalidIPv4AddressError;
 
         const testCases = [
             { description: 'non-integer number', input: 0.5 },
@@ -45,7 +46,7 @@ describe('IPv4Address', () => {
     });
 
     describe('fromString should throw an error', () => {
-        const error = 'Invalid IPv4 address';
+        const error = InvalidIPv4AddressError;
 
         const testCases = [
             { description: 'less than 4 octets', input: '192.0.2' },

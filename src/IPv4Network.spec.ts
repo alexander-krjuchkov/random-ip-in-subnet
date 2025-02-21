@@ -1,3 +1,6 @@
+import { InvalidCidrNotationError } from './errors/InvalidCidrNotationError';
+import { InvalidIPv4AddressError } from './errors/InvalidIPv4AddressError';
+import { InvalidPrefixLengthError } from './errors/InvalidPrefixLengthError';
 import { IPv4Address } from './IPv4Address';
 import { IPv4Network } from './IPv4Network';
 
@@ -63,7 +66,7 @@ describe('IPv4Network', () => {
     });
 
     describe('constructor should throw an error', () => {
-        const error = 'Invalid prefix length';
+        const error = InvalidPrefixLengthError;
 
         const testCases = [
             {
@@ -101,45 +104,41 @@ describe('IPv4Network', () => {
     });
 
     describe('fromString should throw an error', () => {
-        const invalidCidrError = 'Invalid CIDR notation';
-        const invalidIpError = 'Invalid IPv4 address';
-        const invalidPrefixError = 'Invalid prefix length';
-
         const testCases = [
             {
                 description: 'for CIDR notation missing "/"',
                 input: '192.0.2.1',
-                error: invalidCidrError,
+                error: InvalidCidrNotationError,
             },
             {
                 description: 'for CIDR notation with too many "/"',
                 input: '192.0.2.1/24/extra',
-                error: invalidCidrError,
+                error: InvalidCidrNotationError,
             },
             {
                 description: 'for an empty IP part in CIDR notation',
                 input: '/24',
-                error: invalidIpError,
+                error: InvalidIPv4AddressError,
             },
             {
                 description: 'for an invalid IP part in CIDR notation',
                 input: '999.999.999.999/24',
-                error: invalidIpError,
+                error: InvalidIPv4AddressError,
             },
             {
                 description: 'for a non-numeric prefix in CIDR notation',
                 input: '192.0.2.1/a',
-                error: invalidPrefixError,
+                error: InvalidPrefixLengthError,
             },
             {
                 description: 'for a negative prefix in CIDR notation',
                 input: '192.0.2.1/-1',
-                error: invalidPrefixError,
+                error: InvalidPrefixLengthError,
             },
             {
                 description: 'for a prefix greater than 32 in CIDR notation',
                 input: '192.0.2.1/33',
-                error: invalidPrefixError,
+                error: InvalidPrefixLengthError,
             },
         ];
 

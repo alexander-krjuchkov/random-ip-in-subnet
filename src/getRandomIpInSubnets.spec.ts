@@ -2,6 +2,7 @@ import { getRandomIpInSubnets } from './getRandomIpInSubnets';
 import { createRandomGenerator, isUniformlyDistributed } from './testing.utils';
 import { IPv4Network } from './IPv4Network';
 import { IPv4Address } from './IPv4Address';
+import { EmptySubnetListError } from './errors/EmptySubnetListError';
 
 function isIpWithinSubnet(ipAddress: string, cidrNotation: string): boolean {
     const network = IPv4Network.fromString(cidrNotation);
@@ -119,6 +120,16 @@ describe('Statistical tests', () => {
 
             const isUniform = isUniformlyDistributed(frequencies);
             expect(isUniform).toBe(true);
+        });
+    });
+});
+
+describe('Special cases', () => {
+    describe('getRandomIpInSubnet', () => {
+        test('throws error for empty subnet list', () => {
+            expect(() => getRandomIpInSubnets([])).toThrow(
+                EmptySubnetListError,
+            );
         });
     });
 });
