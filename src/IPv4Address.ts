@@ -4,7 +4,7 @@ export class IPv4Address {
     /**
      * @param number - Integer value representing the IPv4 address,
      * must be in the range [0, 2^32 - 1].
-     * @throws {Error} If the number is not an integer or is
+     * @throws {InvalidIPv4AddressError} If the number is not an integer or is
      * out of the valid range.
      */
     constructor(public readonly number: number) {
@@ -15,7 +15,7 @@ export class IPv4Address {
 
     /**
      * @param ip - A string in dot-decimal notation (e.g., "192.0.2.1").
-     * @throws {Error} If the input string is not a valid IPv4 address.
+     * @throws {InvalidIPv4AddressError} If the input string is not a valid IPv4 address.
      */
     public static fromString(ip: string): IPv4Address {
         const octets = ip.split('.').map(Number);

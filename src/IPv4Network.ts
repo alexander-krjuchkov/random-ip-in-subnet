@@ -1,4 +1,5 @@
 import { InvalidCidrNotationError } from './errors/InvalidCidrNotationError';
+import { InvalidIPv4AddressError } from './errors/InvalidIPv4AddressError';
 import { InvalidPrefixLengthError } from './errors/InvalidPrefixLengthError';
 import { IPv4Address } from './IPv4Address';
 
@@ -14,7 +15,7 @@ export class IPv4Network {
      * @param ip - Base IPv4 address.
      * @param prefixLength - Network prefix length
      * as an integer in the inclusive range [0, 32].
-     * @throws {Error} If prefix is invalid.
+     * @throws {InvalidPrefixLengthError} If prefix is invalid.
      */
     public constructor(
         ip: IPv4Address,
@@ -47,7 +48,9 @@ export class IPv4Network {
 
     /**
      * @param cidrNotation - IPv4 CIDR notation string (e.g., "192.0.2.0/24").
-     * @throws {Error} If the input is invalid.
+     * @throws {InvalidCidrNotationError}
+     * @throws {InvalidIPv4AddressError}
+     * @throws {InvalidPrefixLengthError}
      */
     public static fromString(cidrNotation: string): IPv4Network {
         const parts = cidrNotation.split('/');
