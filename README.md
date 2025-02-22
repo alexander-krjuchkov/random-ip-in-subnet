@@ -10,7 +10,7 @@ Generates a random IP address within the specified subnet.
 
 ## Generate IP address from CIDR
 
-The library provides the function `getRandomIpInSubnet(subnet, [random])`, which generates a random IPv4 address that belongs to a specified CIDR subnet (e.g., `192.0.2.0/24`).
+The library provides the function `getRandomIPv4InSubnet(subnet, [random])`, which generates a random IPv4 address that belongs to a specified CIDR subnet (e.g., `192.0.2.0/24`).
 
 - For a `/32` prefix, only one address is available, so that address is returned.
 - For a `/31` prefix, one of the two valid addresses is chosen at random.
@@ -20,7 +20,7 @@ For more details, see the [API documentation](#api-documentation).
 
 ## Multiple subnet support
 
-For working with multiple subnets, the library provides the function `getRandomIpInSubnets(subnets, [random])`. It accepts an array of CIDR subnets, randomly selects one of them, and generates an IP address using the logic of the `getRandomIpInSubnet` function.
+For working with multiple subnets, the library provides the function `getRandomIPv4FromSubnetList(subnets, [random])`. It accepts an array of CIDR subnets, randomly selects one of them, and generates an IP address using the logic of the `getRandomIPv4InSubnet` function.
 
 For more details, see the [API documentation](#api-documentation).
 
@@ -45,37 +45,73 @@ npm i random-ip-in-subnet
 
 ## API documentation
 
-### `getRandomIpInSubnet(subnet: string, random?: () => number): string`
+Before using the functions, please review the common parameters below.
+
+### Common parameters
+
+These parameters are shared among several functions in the library.
+
+#### CIDR notation subnet
+
+A string representing a valid subnet in CIDR notation.  
+For IPv4, this is a string of 4 decimal numbers representing the 4 octets of bits separated by dots, followed by a slash (`/`) and a decimal number from 0 (inclusive) to 32 (inclusive) indicating the prefix length.  
+
+Example: `'192.0.2.0/24'`.
+
+Note: If the provided CIDR includes host bits, they will be ignored. For example, if you pass the CIDR `192.0.2.1/24`, the network address `192.0.2.0/24` will be used.
+However, it is recommended to use subnets with host bits set to 0, such as `192.0.2.0/24`, as this more clearly defines network boundaries and makes them easier to read and work with.
+
+#### Optional parameter: random generator
+
+A function that returns a pseudorandom floating-point number between 0 (inclusive) and 1 (exclusive) with an approximately uniform distribution.
+
+If not provided, `Math.random` is used.
+
+### Functions
+
+#### `getRandomIPv4InSubnet(subnet: string, random?: () => number): string`
 
 Generates a random IP address within the specified subnet.
 
 **Parameters:**
-- `subnet`: A string that specifies a valid subnet in CIDR notation (e.g., `'192.0.2.0/24'`).
-- `random` (optional): A function that returns a pseudorandom floating-point number between 0 (inclusive) and 1 (exclusive) with an approximately uniform distribution. If not provided, `Math.random` is used.
+- `subnet`: A string representing a valid subnet in CIDR notation. See [CIDR notation subnet](#cidr-notation-subnet).
+- `random` (optional): A function to generate a pseudorandom number. See [Optional parameter: random generator](#optional-parameter-random-generator).
 
 **Returns:**
 - A string representing a random IP address within the specified subnet.
 
-### `getRandomIpInSubnets(subnets: string[], random?: () => number): string`
+**Throws:**
+- `ValidationError` if the provided subnet is invalid.
+
+#### `getRandomIPv4FromSubnetList(subnets: string[], random?: () => number): string`
 
 Randomly selects one subnet from the provided list and generates a random IP address within it.
 
 **Parameters:**
-- `subnets`: A non-empty array of strings, each specifying a valid subnet in CIDR notation (e.g., `['198.51.100.0/24', '203.0.113.0/24']`).
-- `random` (optional): A function that returns a pseudorandom floating-point number between 0 (inclusive) and 1 (exclusive) with an approximately uniform distribution. If not provided, `Math.random` is used.
+- `subnets`: A non-empty array of strings, each representing a valid subnet in CIDR notation. See [CIDR notation subnet](#cidr-notation-subnet).
+- `random` (optional): A function to generate a pseudorandom number. See [Optional parameter: random generator](#optional-parameter-random-generator).
 
 **Returns:**
 - A string representing a random IP address from one of the provided subnets.
+
+**Throws:**
+- `ValidationError` if the provided list of subnets is empty or a randomly selected subnet is invalid.
+
+### Errors
+
+#### `ValidationError`
+
+`ValidationError` is a custom error class representing validation errors thrown by the library. It is exported as part of the public API, allowing you to distinguish library-specific errors from other exceptions.
 
 ## Usage examples
 
 ### Generating an IP address for a given subnet
 
 ```js
-import { getRandomIpInSubnet } from 'random-ip-in-subnet';
+import { getRandomIPv4InSubnet } from 'random-ip-in-subnet';
 
 const subnet = '192.0.2.0/24';
-const ip = getRandomIpInSubnet(subnet);
+const ip = getRandomIPv4InSubnet(subnet);
 console.log(ip); // For example, '192.0.2.89'
 ```
 
@@ -97,7 +133,7 @@ import {
     unsafeUniformIntDistribution,
     type RandomGenerator as PureRandomGenerator,
 } from 'pure-rand';
-import { getRandomIpInSubnet } from 'random-ip-in-subnet';
+import { getRandomIPv4InSubnet } from 'random-ip-in-subnet';
 
 function generateFloat64(rng: PureRandomGenerator) {
     const upper = unsafeUniformIntDistribution(0, (1 << 26) - 1, rng);
@@ -110,49 +146,49 @@ const rng = xoroshiro128plus(seed);
 const customRandom = () => generateFloat64(rng);
 
 const subnet = '240.0.0.0/4';
-const ip1 = getRandomIpInSubnet(subnet, customRandom);
+const ip1 = getRandomIPv4InSubnet(subnet, customRandom);
 console.log(ip1); // '255.255.255.85'
-const ip2 = getRandomIpInSubnet(subnet, customRandom);
+const ip2 = getRandomIPv4InSubnet(subnet, customRandom);
 console.log(ip2); // '254.3.114.187'
 ```
 
 ### Generating an IP from array of subnets
 
 ```js
-import { getRandomIpInSubnets } from 'random-ip-in-subnet';
+import { getRandomIPv4FromSubnetList } from 'random-ip-in-subnet';
 
 const subnets = ['198.51.100.0/24', '203.0.113.0/24'];
-const ip = getRandomIpInSubnets(subnets);
+const ip = getRandomIPv4FromSubnetList(subnets);
 console.log(ip);
+```
+
+### Handling ValidationError
+
+```js
+import { getRandomIPv4InSubnet, ValidationError } from 'random-ip-in-subnet';
+
+try {
+    const subnet = 'invalid_subnet';
+    const ip = getRandomIPv4InSubnet(subnet);
+    console.log(ip);
+} catch (error) {
+    if (error instanceof ValidationError) {
+        console.error('Validation error:', error.message);
+    } else {
+        throw error;
+    }
+}
 ```
 
 ## Roadmap
 
-* ✅ ~~**Improve documentation**~~  
-    ~~Documentation should clearly describe the functionality of the library and provide a clear understanding of its purpose and features.~~
-
-* ✅ ~~**Implement testing**~~  
-    ~~Testing is an essential part of developing a high-quality product. Despite the challenges of implementing tests for a library that works with random variables, testing should still be integrated into the library to improve reliability and correctness.~~
-
-    * ✅ ~~**Invariant testing**~~  
-    ~~These tests ensure that basic guarantees such as respecting value bounds are maintained, regardless of the randomness involved.~~
-
-    * ✅ ~~**PRNG backward compatibility tests**~~  
-    ~~When using a PRNG with a fixed seed, these tests ensure backward compatibility within each major version of the library.~~
-
-    * ✅ ~~**Statistical testing**~~  
-    ~~These tests analyze the statistical characteristics of the generated random results.~~
-
-* ❑ **v1.0**
-    - **Improve validation**  
-    Make input validation stricter, rework error handling, add error handling tests.
-
-    - **Refactor**  
-    Improve naming, refactor code for clarity and maintainability, add additional tests where needed.
-
 * ❑ **v1.1**
     - **Add IPv6 support**  
     Add IPv6 support for better compliance with modern networking standards.
+
+## Changelog
+
+For a detailed list of changes, please see [CHANGELOG](./CHANGELOG.md).
 
 ## Contribute
 
