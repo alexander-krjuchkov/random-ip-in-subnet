@@ -1,14 +1,34 @@
-# Random IP address generator for CIDR subnets
+# Random IP Address Generator for CIDR Subnets
+
+[![NPM Version](https://img.shields.io/npm/v/random-ip-in-subnet)](https://www.npmjs.com/package/random-ip-in-subnet)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
 Generates a random IP address within the specified subnet.
 
-## Key features
+## Key Features
 
 - Generates random IP addresses based on a given CIDR.
 - Supports multiple subnets.
 - Allows using custom random functions (e.g., third-party PRNG algorithms).
 
-## Generate IP address from CIDR
+## Quick Start
+
+Install the library:
+
+```sh
+npm i random-ip-in-subnet
+```
+
+Generate a random IP from a subnet:
+
+```js
+import { getRandomIPv4InSubnet } from 'random-ip-in-subnet';
+
+const ip = getRandomIPv4InSubnet('192.0.2.0/24');
+console.log(ip); // For example, '192.0.2.89'
+```
+
+## Generate IP Address from CIDR
 
 The library provides the function `getRandomIPv4InSubnet(subnet, [random])`, which generates a random IPv4 address that belongs to a specified CIDR subnet (e.g., `192.0.2.0/24`).
 
@@ -18,13 +38,13 @@ The library provides the function `getRandomIPv4InSubnet(subnet, [random])`, whi
 
 For more details, see the [API documentation](#api-documentation).
 
-## Multiple subnet support
+## Multiple Subnet Support
 
 For working with multiple subnets, the library provides the function `getRandomIPv4FromSubnetList(subnets, [random])`. It accepts an array of CIDR subnets, randomly selects one of them, and generates an IP address using the logic of the `getRandomIPv4InSubnet` function.
 
 For more details, see the [API documentation](#api-documentation).
 
-## Custom random function support
+## Custom Random Function Support
 
 By default, the library uses the native `Math.random` to generate random values.
 
@@ -43,7 +63,7 @@ run the following command:
 npm i random-ip-in-subnet
 ```
 
-## API documentation
+## API Documentation
 
 Before using the functions, please review the common parameters below.
 
@@ -103,9 +123,9 @@ Randomly selects one subnet from the provided list and generates a random IP add
 
 `ValidationError` is a custom error class representing validation errors thrown by the library. It is exported as part of the public API, allowing you to distinguish library-specific errors from other exceptions.
 
-## Usage examples
+## Basic Usage Examples
 
-### Generating an IP address for a given subnet
+### Generate IP from a single subnet
 
 ```js
 import { getRandomIPv4InSubnet } from 'random-ip-in-subnet';
@@ -115,7 +135,21 @@ const ip = getRandomIPv4InSubnet(subnet);
 console.log(ip); // For example, '192.0.2.89'
 ```
 
-### Using a custom random number generator
+### Generate IP from multiple subnets
+
+```js
+import { getRandomIPv4FromSubnetList } from 'random-ip-in-subnet';
+
+const subnets = ['198.51.100.0/24', '203.0.113.0/24'];
+const ip = getRandomIPv4FromSubnetList(subnets);
+console.log(ip); // For example, '198.51.100.123'
+```
+
+## Advanced Usage Examples
+
+### Using a custom random function
+
+You can pass your own random function for reproducibility.
 
 Here is an example of using a deterministic pseudorandom number generator provided by the popular [pure-rand](https://www.npmjs.com/package/pure-rand) library.
 
@@ -150,16 +184,6 @@ const ip1 = getRandomIPv4InSubnet(subnet, customRandom);
 console.log(ip1); // '255.255.255.85'
 const ip2 = getRandomIPv4InSubnet(subnet, customRandom);
 console.log(ip2); // '254.3.114.187'
-```
-
-### Generating an IP from array of subnets
-
-```js
-import { getRandomIPv4FromSubnetList } from 'random-ip-in-subnet';
-
-const subnets = ['198.51.100.0/24', '203.0.113.0/24'];
-const ip = getRandomIPv4FromSubnetList(subnets);
-console.log(ip);
 ```
 
 ### Handling ValidationError
