@@ -6,6 +6,27 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 The format is inspired by, but not limited to, [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [[1.0.0](https://github.com/alexander-krjuchkov/random-ip-in-subnet/compare/v0.2.2...v1.0.0)] - 2025-02-22
+
+### Added
+
+- **Documentation:** Add changelog to the project.
+- **Documentation:** Make inline code documentation available to library users.
+- **Error handling:** Add `ValidationError` class to catch errors thrown by the library.
+
+### Changed
+
+- **Breaking changes:** Refactor the public API:
+  - Rename function `getRandomIpInSubnet` to `getRandomIPv4InSubnet`.
+  - Rename function `getRandomIpInSubnets` to `getRandomIPv4FromSubnetList`.
+- **Internal improvements:**
+  - Conduct extensive internal refactoring.
+  - Improve testing to achieve 100% coverage of significant code.
+
+### Fixed
+
+- Fix IP address generation for CIDR notations with non-zero host bits. Previously, for notations like `192.0.2.128/24`, the library incorrectly generated addresses from `192.0.2.128` to `192.0.2.255`. Now, it correctly ignores the host bits in the IP address and generates addresses from `192.0.2.1` to `192.0.2.254`, consistent with the standard network address `192.0.2.0/24`.
+
 ## [[0.2.2](https://github.com/alexander-krjuchkov/random-ip-in-subnet/compare/v0.2.1...v0.2.2)] - 2025-02-14
 
 ### Added
