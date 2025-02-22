@@ -6,6 +6,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 The format is inspired by, but not limited to, [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [[1.0.1](https://github.com/alexander-krjuchkov/random-ip-in-subnet/compare/v1.0.0...v1.0.1)] - 2025-02-22
+
+### Changed
+
+- **Documentation:** Minor improvements to make the documentation more user-friendly.
+
 ## [[1.0.0](https://github.com/alexander-krjuchkov/random-ip-in-subnet/compare/v0.2.2...v1.0.0)] - 2025-02-22
 
 ### Added
