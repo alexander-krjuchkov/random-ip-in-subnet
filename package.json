@@ -1,6 +1,6 @@
 {
   "name": "random-ip-in-subnet",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Generates a random IP address within the specified subnet.",
   "files": [
     "dist"
