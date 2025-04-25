@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 The format is inspired by, but not limited to, [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [[1.0.4](https://github.com/alexander-krjuchkov/random-ip-in-subnet/compare/v1.0.3...v1.0.4)] - 2025-04-25
 
 ### Changed
 
