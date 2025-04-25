@@ -34,7 +34,9 @@
     "prng",
     "random",
     "reproducible",
-    "subnet"
+    "simulation",
+    "subnet",
+    "testing"
   ],
   "author": "Alexander Kryuchkov <alexander.v.kryuchkov@yandex.ru>",
   "license": "ISC",
