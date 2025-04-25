@@ -136,7 +136,7 @@ describe('Statistical tests', () => {
                 expect(isUniform).toBe(true);
             });
 
-            test('for /24 prefix, returns approximately uniform distribution among available hosts', () => {
+            test('for /0 prefix, returns approximately uniform distribution among available hosts', () => {
                 const subnet = '0.0.0.0/0';
                 const lastBitsToTest = 4;
                 const categoriesCount = 2 ** lastBitsToTest;

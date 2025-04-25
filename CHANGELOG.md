@@ -11,6 +11,7 @@ The format is inspired by, but not limited to, [Keep a Changelog](https://keepac
 ### Changed
 
 - **Documentation:** Clarify project purpose and unique aspects, remove redundancy, improve overall structure and readability.
+- **Internal improvements:** Fix typos in test descriptions (no changes to test logic).
 
 ## [[1.0.3](https://github.com/alexander-krjuchkov/random-ip-in-subnet/compare/v1.0.2...v1.0.3)] - 2025-03-17
 

@@ -125,7 +125,7 @@ describe('Statistical tests', () => {
 });
 
 describe('Special cases', () => {
-    describe('getRandomIPv4InSubnet', () => {
+    describe('getRandomIPv4FromSubnetList', () => {
         test('throws error for empty subnet list', () => {
             expect(() => getRandomIPv4FromSubnetList([])).toThrow(
                 EmptySubnetListError,
